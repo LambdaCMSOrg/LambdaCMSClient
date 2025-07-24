@@ -1,14 +1,38 @@
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Files({ file = {}, onDelete }) {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [showOption, setShowOptions] = useState(false);
+    const [thumbnailUrl, setThumbnailUrl] = useState(null);
 
     const handleOptionClick = (e) => {
         e.stopPropagation();
         setShowOptions(prev => !prev);
     }
+
+    useEffect(() => {
+        const loadThumbnailUrl = async () => {
+            const token = localStorage.getItem("token");
+            try {
+                const res = await fetch(`http://localhost:5158/file/image/thumbnail/request-url?id=${file.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const data = await res.json();
+
+                const url =  `http://localhost:5158/file/image/thumbnail/${file.id}?expiresAt=${data.expiresAt}&token=${encodeURIComponent(data.token)}`;
+                console.log("Thumbnail response:", data);
+                setThumbnailUrl(url)
+            } catch (error) {
+                console.error("Fehler bi Laden der Thumbnail URL:", error);
+            }
+        };
+
+        loadThumbnailUrl();
+    }, [file.id]);
+
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -33,7 +57,7 @@ function Files({ file = {}, onDelete }) {
         e.stopPropagation();
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://localhost:5158/file/${file.id}`, {
+            const res = await fetch(`http://localhost:5158/api/image/${file.id}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -79,9 +103,9 @@ function Files({ file = {}, onDelete }) {
                     </button>
                 </div>
                 <div className="bg-[#CFEFD4] w-[270px] h-[135px] rounded-3xl ">
-                    {file.thumbnailUrl ? (
+                    {thumbnailUrl ? (
                         <img
-                            src={file.thumbnailUrl}
+                            src={thumbnailUrl}
                             alt="Dateivorschau"
                             className="w-full h-full object-cover"
                         />

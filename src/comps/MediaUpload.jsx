@@ -28,7 +28,7 @@ function MediaUpload({ onClose, onUploadSuccess }) {
             const uploadedFiles = Array.isArray(data) ? data : [data];
             onUploadSuccess(uploadedFiles);
 
-            alert("Upload erfolgreich!");
+            // alert("Upload erfolgreich!");
             onClose();
         } catch (err) {
             alert("Fehler beim Upload: " + err.message);
