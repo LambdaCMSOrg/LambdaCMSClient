@@ -9,7 +9,7 @@ function MediaUpload({ onClose, onUploadSuccess }) {
 
         const formData = new FormData();
         for (const file of files) {
-            formData.append("Name", "MyFile");
+            formData.append("Name", file.name);
             formData.append("File", file);
         }
 

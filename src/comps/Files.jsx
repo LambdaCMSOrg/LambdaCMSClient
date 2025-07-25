@@ -5,11 +5,33 @@ function Files({ file = {}, onDelete }) {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [showOption, setShowOptions] = useState(false);
     const [thumbnailUrl, setThumbnailUrl] = useState(null);
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [newName, setNewName] = useState(file.name || "");
 
     const handleOptionClick = (e) => {
         e.stopPropagation();
         setShowOptions(prev => !prev);
-    }
+    };
+
+    const handleRename = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const res = await fetch(`http://localhost:5158/api/image/${file.id}/rename?newName=${encodeURIComponent(newName)}`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) throw new Error("Umbenennen fehlgeschlagen");
+
+            setIsRenaming(false);
+            window.location.reload(); // oder: onRename() auslösen
+        } catch (err) {
+            alert("Fehler beim Umbenennen");
+            console.error(err);
+        }
+    };
 
     useEffect(() => {
         const loadThumbnailUrl = async () => {
@@ -82,7 +104,7 @@ function Files({ file = {}, onDelete }) {
                     </div>
                 </div>
             )}
-            <div className="w-[330px] h-[225px] bg-[#ffffff] rounded-3xl border-2 border-gray-200 flex flex-col items-center transition-transform duration-200 hover:scale-110"
+            <div className="w-[330px] h-[225px] bg-[#ffffff] cursor-pointer rounded-3xl border-2 border-gray-200 flex flex-col items-center transition-transform duration-200 hover:scale-110"
                  onClick={handleClick}
             >
                 <div className=" relative w-[270px] h-[60px] bg-[#ffffff] rounded-3xl flex flex-row items-center justify-between">
@@ -94,10 +116,23 @@ function Files({ file = {}, onDelete }) {
                     >
                         <EllipsisHorizontalIcon className="w-7 h-7 text-[#777777]"/>
                         {showOption && (
-                            <div className="absolute top-10 right-0 bg-[#efefef] border rounded shadow p-2 z-50">
-                                <button className="text-red-600 font-semibold hover:underline"
-                                        onClick={handleDelete}
-                                >Datei Löschen</button>
+                            <div className="absolute top-10 right-0 bg-[#efefef] border rounded shadow p-2 z-50 space-y-2">
+                                <button
+                                    className="text-red-600 font-semibold hover:underline block"
+                                    onClick={handleDelete}
+                                >
+                                    Datei Löschen
+                                </button>
+                                <button
+                                    className="text-blue-600 font-semibold hover:underline block"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsRenaming(true);
+                                        setShowOptions(false);
+                                    }}
+                                >
+                                    Datei Umbenennen
+                                </button>
                             </div>
                         )}
                     </button>
@@ -114,6 +149,33 @@ function Files({ file = {}, onDelete }) {
                     )}
                 </div>
             </div>
+            {isRenaming && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-xl shadow-lg space-y-4 w-[300px] text-center">
+                        <h3 className="text-lg font-semibold">Datei umbenennen</h3>
+                        <input
+                            type="text"
+                            className="w-full border rounded px-2 py-1"
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                        />
+                        <div className="flex justify-center space-x-4">
+                            <button
+                                className="bg-blue-600 text-white px-4 py-1 rounded"
+                                onClick={handleRename}
+                            >
+                                Speichern
+                            </button>
+                            <button
+                                className="text-gray-500 hover:underline"
+                                onClick={() => setIsRenaming(false)}
+                            >
+                                Abbrechen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

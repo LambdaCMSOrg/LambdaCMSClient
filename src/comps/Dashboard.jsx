@@ -10,8 +10,6 @@ function Dashboard() {
             <div className="w-full flex flex-row justify-between">
                 <Files/>
                 <Files/>
-                <Files/>
-                <Files/>
             </div>
         </div>
     );
