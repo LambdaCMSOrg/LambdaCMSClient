@@ -1,5 +1,6 @@
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
 import { useState, useEffect } from 'react';
+import {renameImage, getThumbnailUrl, getImageBlobUrl, deleteImage} from "../common/Api";
 
 function Files({ file = {}, onDelete }) {
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -14,42 +15,28 @@ function Files({ file = {}, onDelete }) {
     };
 
     const handleRename = async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const res = await fetch(`http://localhost:5158/api/image/${file.id}/rename?newName=${encodeURIComponent(newName)}`, {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+        const result = await renameImage(file.id, newName);
 
-            if (!res.ok) throw new Error("Umbenennen fehlgeschlagen");
+        setIsRenaming(false);
 
-            setIsRenaming(false);
-            window.location.reload(); // oder: onRename() auslösen
-        } catch (err) {
-            alert("Fehler beim Umbenennen");
-            console.error(err);
+        if (!result.success) {
+            alert(result.error);
+            return;
         }
+
+        window.location.reload();
     };
 
     useEffect(() => {
         const loadThumbnailUrl = async () => {
-            const token = localStorage.getItem("token");
-            try {
-                const res = await fetch(`http://localhost:5158/file/image/thumbnail/request-url?id=${file.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const data = await res.json();
+            const result = await getThumbnailUrl(file.id);
 
-                const url =  `http://localhost:5158/file/image/thumbnail/${file.id}?expiresAt=${data.expiresAt}&token=${encodeURIComponent(data.token)}`;
-                console.log("Thumbnail response:", data);
-                setThumbnailUrl(url)
-            } catch (error) {
-                console.error("Fehler bi Laden der Thumbnail URL:", error);
+            if (!result.success) {
+                alert(result.error);
+                return;
             }
+
+            setThumbnailUrl(result.url);
         };
 
         loadThumbnailUrl();
@@ -58,39 +45,30 @@ function Files({ file = {}, onDelete }) {
 
     const handleClick = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-        try {
-            const res = await fetch(`http://localhost:5158/file/image/${file.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            const blob = await res.blob();
-            const url = URL.createObjectURL(blob);
-            setPreviewUrl(url);
-        } catch (error) {
-            console.error("Fehler beim Laden der Datei:",error);
-            alert("Fehler beim Laden der Datei");
+
+        const result = await getImageBlobUrl(file.id);
+
+        if (!result.success) {
+            alert(result.error);
+            return;
         }
+
+        setPreviewUrl(result.url);
     };
     console.log("file object:", file);
 
     const handleDelete = async (e) => {
         e.stopPropagation();
-        const token = localStorage.getItem('token');
-        try {
-            const res = await fetch(`http://localhost:5158/api/image/${file.id}`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (onDelete !== undefined) {
-                onDelete(file.id);
-            }
-        } catch (error) {
-            console.error("Fehler beim Löschen:", error);
-            alert("Datei konnte nicht gelöscht werden");
+
+        const result = await deleteImage(file.id);
+
+        if (!result.success) {
+            alert(result.error);
+            return;
+        }
+
+        if (onDelete !== undefined) {
+            onDelete(file.id);
         }
     };
 

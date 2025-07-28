@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {login} from "../common/Api";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -9,30 +10,14 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
+        const result = await login(email, password);
 
-            const res = await fetch("http://127.0.0.1:5158/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!res.ok) {
-                throw new Error("Login fehlgeschlagen");
-            }
-
-
-            const data = await res.json();
-            console.log("Token:", data.token);
-
-            localStorage.setItem("token", data.token);
-
-            navigate("/");
-        } catch (err) {
-            alert("Login fehlgeschlagen: " + err.message);
+        if (!result.success) {
+            alert("Login failed!");
+            return;
         }
+
+        navigate("/");
     };
 
     return (

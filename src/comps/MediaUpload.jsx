@@ -1,38 +1,19 @@
 import {useRef} from "react";
+import {uploadImage} from "../common/Api";
 
 function MediaUpload({ onClose, onUploadSuccess }) {
     const fileInputRef = useRef();
 
     const handleFiles = async (files) => {
-        const token = localStorage.getItem("token");
-        console.log(token);
+        const result = await uploadImage(files);
 
-        const formData = new FormData();
-        for (const file of files) {
-            formData.append("Name", file.name);
-            formData.append("File", file);
+        if (!result.success) {
+            alert(result.error);
         }
 
-        try {
-            const res = await fetch("http://localhost:5158/api/image", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                body: formData,
-            });
+        onUploadSuccess(result.files);
 
-            if (!res.ok) throw new Error("Upload failed");
-
-            const data = await res.json();
-            const uploadedFiles = Array.isArray(data) ? data : [data];
-            onUploadSuccess(uploadedFiles);
-
-            // alert("Upload erfolgreich!");
-            onClose();
-        } catch (err) {
-            alert("Fehler beim Upload: " + err.message);
-        }
+        onClose();
     };
 
     const handleDrop = (e) => {

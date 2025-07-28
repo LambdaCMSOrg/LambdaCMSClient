@@ -1,6 +1,7 @@
 import Files from "./Files.jsx";
 import MediaUpload from "./MediaUpload.jsx";
 import {useState, useEffect} from "react";
+import {getImages} from "../common/Api";
 
 function Galerie() {
     const [showUpload, setShowUpload] = useState(false);
@@ -18,18 +19,14 @@ function Galerie() {
 
     useEffect(() => {
         const fetchFiles = async () => {
-            const token = localStorage.getItem("token");
-            try {
-                const res = await fetch("http://localhost:5158/api/image", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const data = await res.json();
-                setFiles(data);
-            } catch (err) {
-                console.error("Fehler beim Laden der Dateien:", err);
+            const result = await getImages();
+
+            if (!result.success) {
+                alert(result.error);
+                return;
             }
+
+            setFiles(result.files);
         };
 
         fetchFiles();
