@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import Sidemenu from "./Sidemenu";
+import Sidebar from "./Sidebar";
 import Dashboard from "./Dashboard";
-import Galerie from "./Galerie";
+import Gallery from "./Gallery";
 import Login from "./Login";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -11,7 +11,7 @@ function Layout() {
 
     return (
         <div className="flex">
-            {!hideSidebar && <Sidemenu />}
+            {!hideSidebar && <Sidebar />}
 
             <Routes>
                 <Route path="/login" element={<Login />} />
@@ -24,10 +24,10 @@ function Layout() {
                     }
                 />
                 <Route
-                    path="/galerie"
+                    path="/gallery"
                     element={
                         <ProtectedRoute>
-                            <Galerie />
+                            <Gallery />
                         </ProtectedRoute>
                     }
                 />

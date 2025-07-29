@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 
-function Sidebarbutton({label, Icon, to }) {
+function SidebarButton({label, Icon, to }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -30,4 +30,4 @@ function Sidebarbutton({label, Icon, to }) {
         </div>
     );
 }
-export default Sidebarbutton;
+export default SidebarButton;

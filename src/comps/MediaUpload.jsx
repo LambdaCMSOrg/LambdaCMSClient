@@ -16,9 +16,9 @@ function MediaUpload({ onClose, onUploadSuccess }) {
         onClose();
     };
 
-    const handleDrop = (e) => {
+    const handleDrop = async (e) => {
         e.preventDefault();
-        handleFiles(e.dataTransfer.files);
+        await handleFiles(e.dataTransfer.files);
     };
 
     const handleDragOver = (e) => {
@@ -29,8 +29,8 @@ function MediaUpload({ onClose, onUploadSuccess }) {
         fileInputRef.current.click();
     };
 
-    const handleFileChange = (e) => {
-        handleFiles(e.target.files);
+    const handleFileChange = async (e) => {
+        await handleFiles(e.target.files);
     };
 
     return (

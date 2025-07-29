@@ -1,4 +1,4 @@
-import Files from "./Files.jsx";
+import FileItem from "./Items/FileItem.jsx";
 
 function Dashboard() {
     return (
@@ -8,8 +8,8 @@ function Dashboard() {
                 <p className=" text-[#555555]">Latest uploaded Content</p>
             </div>
             <div className="w-full flex flex-row justify-between">
-                <Files/>
-                <Files/>
+                <FileItem/>
+                <FileItem/>
             </div>
         </div>
     );
