@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { hasToken } from "../common/ApiService";
+import { hasValidToken } from "../common/ApiService";
 
 function ProtectedRoute({ children }) {
-    return hasToken() ? children : <Navigate to="/login" replace />;
+    return hasValidToken() ? children : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoute;
