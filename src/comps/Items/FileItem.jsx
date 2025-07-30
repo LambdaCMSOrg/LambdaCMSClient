@@ -5,7 +5,6 @@ import OptionsMenu from "./OptionsMenu";
 
 export default function FileItem({ file = {}, onDelete }) {
     const [previewUrl, setPreviewUrl] = useState(null);
-    const [showOptions, setShowOptions] = useState(false);
     const [thumbnailUrl, setThumbnailUrl] = useState(null);
     const [isRenaming, setIsRenaming] = useState(false);
 
@@ -52,7 +51,8 @@ export default function FileItem({ file = {}, onDelete }) {
 
         setPreviewUrl(result.url);
     };
-        const handleDelete = async (e) => {
+
+    const handleDelete = async (e) => {
         e.stopPropagation();
 
         const result = await deleteImage(file.id);
@@ -82,7 +82,7 @@ export default function FileItem({ file = {}, onDelete }) {
                 <div className=" relative w-[270px] h-[60px] bg-[#ffffff] rounded-3xl flex flex-row items-center justify-between">
                     <h3 className="text-[#323232] text-[19px]">{file.name || "Unnamed file"}</h3>
 
-                    <OptionsMenu showOptions={showOptions} setShowOptions={setShowOptions} handleDelete={handleDelete} setIsRenaming={setIsRenaming} />
+                    <OptionsMenu handleDelete={handleDelete} setIsRenaming={setIsRenaming} />
                 </div>
                 <div className="bg-[#CFEFD4] w-[270px] h-[135px] rounded-3xl ">
                     {thumbnailUrl ? (<img src={thumbnailUrl} alt="File preview" className="w-full h-full object-cover"/>) :
