@@ -1,7 +1,7 @@
 import FileItem from "./Items/FileItem.jsx";
 import MediaUpload from "./MediaUpload.jsx";
 import {useState, useEffect} from "react";
-import {getImages} from "../common/Api";
+import {getAllImages} from "../common/ApiService";
 
 export default function Gallery() {
     const [showUpload, setShowUpload] = useState(false);
@@ -19,7 +19,7 @@ export default function Gallery() {
 
     useEffect(() => {
         const fetchFiles = async () => {
-            const result = await getImages();
+            const result = await getAllImages();
 
             if (!result.success) {
                 alert(result.error);

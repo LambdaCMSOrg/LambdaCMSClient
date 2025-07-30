@@ -1,5 +1,5 @@
 import {useRef} from "react";
-import {uploadImage} from "../common/Api";
+import {uploadImage} from "../common/ApiService";
 
 function MediaUpload({ onClose, onUploadSuccess }) {
     const fileInputRef = useRef();

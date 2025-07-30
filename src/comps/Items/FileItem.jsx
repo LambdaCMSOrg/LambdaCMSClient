@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {renameImage, getThumbnailUrl, getImageBlobUrl, deleteImage} from "../../common/Api";
+import {renameImage, getThumbnailUrl, getImageBlobUrl, deleteImage} from "../../common/ApiService";
 import FileRenameDialogue from "./FileRenameDialogue";
 import OptionsMenu from "./OptionsMenu";
 
@@ -13,6 +13,8 @@ export default function FileItem({ file = {}, onDelete }) {
         const result = await renameImage(file.id, newName);
 
         setIsRenaming(false);
+
+        console.log("Rename result: ", result);
 
         if (!result.success) {
             alert(result.error);

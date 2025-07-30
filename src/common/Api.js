@@ -1,8 +1,8 @@
-const serverAddress = "localhost";
-const port = 5158;
+export const serverAddress = "localhost";
+export const port = 5158;
 
-export async function getImages() {
-    const result = await apiFetch('api/image', "GET", null, null, true);
+export async function getAllImages(token) {
+    const result = await apiFetch('api/image', "GET", null, null, true, token);
 
     if (!result.success) {
         return result;
@@ -13,7 +13,7 @@ export async function getImages() {
     return { success: true, files: data };
 }
 
-export async function uploadImage(files) {
+export async function uploadImage(token, files) {
     const formData = new FormData();
 
     for (const file of files) {
@@ -21,7 +21,7 @@ export async function uploadImage(files) {
         formData.append("File", file);
     }
 
-    const result = await apiFetch('api/image', "POST", null, formData, true);
+    const result = await apiFetch('api/image', "POST", null, formData, true, token);
 
     if (!result.success) {
         return result;
@@ -31,10 +31,10 @@ export async function uploadImage(files) {
     return { success: true, files: Array.isArray(data) ? data : [data]};
 }
 
-export async function renameImage(fileId, newFilename) {
+export async function renameImage(token, fileId, newFilename) {
     const endpoint = `api/image/${fileId}/rename?newName=${encodeURIComponent(newFilename)}`;
 
-    const result = await apiFetch(endpoint, "PATCH", null, null, true);
+    const result = await apiFetch(endpoint, "PATCH", null, null, true, token);
 
     if (!result.success) {
         return result;
@@ -43,10 +43,10 @@ export async function renameImage(fileId, newFilename) {
     return { success: true };
 }
 
-export async function getThumbnailUrl(fileId) {
+export async function getThumbnailUrl(token) {
     const endpoint = `file/image/thumbnail/request-url`;
 
-    const result = await apiFetch(endpoint, "GET", null, null, true);
+    const result = await apiFetch(endpoint, "GET", "application/json", null, true, token);
 
     if (!result.success) {
         return result;
@@ -54,13 +54,13 @@ export async function getThumbnailUrl(fileId) {
 
     const data = await result.result.json();
 
-    return { success: true, url: constructUrl(`file/image/thumbnail/${fileId}?expiresAt=${data.expiresAt}&token=${encodeURIComponent(data.token)}`)};
+    return { success: true, expiresAt: data.expiresAt, token: data.token };
 }
 
-export async function getImageBlobUrl(fileId) {
+export async function getImageBlobUrl(token, fileId) {
     const endpoint = `file/image/${fileId}`;
 
-    const result = await apiFetch(endpoint, "GET", null, null, true);
+    const result = await apiFetch(endpoint, "GET", null, null, true, token);
 
     if (!result.success) {
         return result;
@@ -72,10 +72,10 @@ export async function getImageBlobUrl(fileId) {
     return { success: true, url: url };
 }
 
-export async function deleteImage(fileId) {
+export async function deleteImage(token, fileId) {
     const endpoint = `api/image/${fileId}`;
 
-    const result = await apiFetch(endpoint, "DELETE", null, null, true);
+    const result = await apiFetch(endpoint, "DELETE", null, null, true, token);
 
     if (!result.success) {
         return result;
@@ -85,7 +85,8 @@ export async function deleteImage(fileId) {
 }
 
 export async function login(email, password) {
-    const result = await apiFetch('api/auth/login', "POST", "application/json", JSON.stringify({ email, password }), false);
+    const result = await apiFetch('api/auth/login', "POST",
+        "application/json", JSON.stringify({ email, password }), false, null);
 
     if (!result.success) {
         return result;
@@ -93,23 +94,29 @@ export async function login(email, password) {
 
     const data = await result.result.json();
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("refreshToken", data.refreshToken);
-
-    return { success: true };
+    return { success: true, token: data.token, refreshToken: data.refreshToken, userId: data.userId };
 }
 
-async function apiFetch(endpoint, method, contentType, body, authorize) {
+export async function refreshAccessToken(userId, refreshToken) {
+    const result = await apiFetch('api/auth/refresh', "POST",
+        "application/json", JSON.stringify({ userId, refreshToken }), false, null);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, token: data.token, refreshToken: data.refreshToken };
+}
+
+async function apiFetch(endpoint, method, contentType, body, authorize, token) {
     const headers = {}
 
     try {
-        let token;
-
         if (authorize) {
-            token = getToken();
-
             if (!token) {
-                return { success: false, error: "No auth token found" };
+                return { success: false, error: "Invalid auth token found" };
             }
 
             headers["Authorization"] = `Bearer ${token}`;
@@ -135,10 +142,6 @@ async function apiFetch(endpoint, method, contentType, body, authorize) {
         console.error(err);
         return { success: false, error: "Network or internal error occurred" };
     }
-}
-
-function getToken() {
-    return localStorage.getItem("token");
 }
 
 function constructUrl(endpoint) {
