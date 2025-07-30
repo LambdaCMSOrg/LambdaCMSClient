@@ -1,12 +1,17 @@
 import * as Api from "./Api.js";
 import {port, serverAddress} from "./Api.js";
 
+const accessTokenKey = "accessToken";
+const userIdKey = "userId";
+const tokenExpireTimestampKey = "tokenExpireTimestamp";
+const thumbUrlDataKey = "thumbUrlData";
+
 const accessTokenExpireTimeMinutes = 15;
 
 let refreshPromise = null;
 
-export function hasToken() {
-    return getAccessToken() !== null;
+export function hasValidToken() {
+    return getAccessToken() !== null && !isTokenExpired();
 }
 
 export async function getAllImages() {
@@ -52,7 +57,6 @@ export async function login(email, password) {
         return result;
     }
 
-    setRefreshToken(result.refreshToken);
     setAccessToken(result.token);
     setUserId(result.userId);
 
@@ -62,55 +66,47 @@ export async function login(email, password) {
 }
 
 function getAccessToken() {
-    return sessionStorage.getItem('accessToken');
+    return sessionStorage.getItem(accessTokenKey);
 }
 
 function setAccessToken(accessToken) {
-   sessionStorage.setItem('accessToken', accessToken);
-}
-
-function getRefreshToken() {
-    return sessionStorage.getItem('refreshToken');
-}
-
-function setRefreshToken(refreshToken) {
-    sessionStorage.setItem('refreshToken', refreshToken);
+   sessionStorage.setItem(accessTokenKey, accessToken);
 }
 
 function getUserId() {
-    return sessionStorage.getItem('userId');
+    return sessionStorage.getItem(userIdKey);
 }
 
 function setUserId(userId) {
-    sessionStorage.setItem('userId', userId);
+    sessionStorage.setItem(userIdKey, userId);
 }
 
 function getThumbnailUrlData() {
-    const raw = sessionStorage.getItem("thumbUrlData");
+    const raw = sessionStorage.getItem(thumbUrlDataKey);
     return raw ? JSON.parse(raw) : null;
 }
 
 function setThumbnailUrlData(expiresAt, token) {
     const raw = JSON.stringify({ expiresAt: expiresAt, token: token})
-    sessionStorage.setItem('thumbUrlData', raw);
+    sessionStorage.setItem(thumbUrlDataKey, raw);
 }
 
 function getTokenExpireTimestamp() {
-    const raw = sessionStorage.getItem("tokenExpireTimestamp");
+    const raw = sessionStorage.getItem(tokenExpireTimestampKey);
     return raw ? new Date(raw) : null;
 }
 
 function setTokenExpireTimestamp(timestamp) {
-    sessionStorage.setItem("tokenExpireTimestamp", timestamp.toISOString());
+    sessionStorage.setItem(tokenExpireTimestampKey, timestamp.toISOString());
 }
 
 async function getOrAcquireToken() {
     if (getAccessToken() && !isTokenExpired()) {
         return getAccessToken();
     }
-    else if (getUserId() && getRefreshToken()) {
+    else if (getUserId()) {
         if (!refreshPromise) {
-            refreshPromise = Api.refreshAccessToken(getUserId(), getRefreshToken())
+            refreshPromise = Api.refreshAccessToken(getUserId())
                 .then(result => {
                     if (!result.success) {
                         refreshPromise = null;
@@ -118,7 +114,6 @@ async function getOrAcquireToken() {
                     }
 
                     setTokenExpireTimestamp(new Date(Date.now() + accessTokenExpireTimeMinutes * 60 * 1000));
-                    setRefreshToken(result.refreshToken);
                     setAccessToken(result.token);
 
                     refreshPromise = null;

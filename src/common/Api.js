@@ -97,9 +97,9 @@ export async function login(email, password) {
     return { success: true, token: data.token, refreshToken: data.refreshToken, userId: data.userId };
 }
 
-export async function refreshAccessToken(userId, refreshToken) {
+export async function refreshAccessToken(userId) {
     const result = await apiFetch('api/auth/refresh', "POST",
-        "application/json", JSON.stringify({ userId, refreshToken }), false, null);
+        "application/json", JSON.stringify({ userId }), false, null);
 
     if (!result.success) {
         return result;
@@ -107,7 +107,7 @@ export async function refreshAccessToken(userId, refreshToken) {
 
     const data = await result.result.json();
 
-    return { success: true, token: data.token, refreshToken: data.refreshToken };
+    return { success: true, token: data.token };
 }
 
 async function apiFetch(endpoint, method, contentType, body, authorize, token) {
