@@ -1,6 +1,25 @@
 import FileItem from "./Items/FileItem.jsx";
+import {useEffect, useState} from "react";
+import {getAllFiles} from "../common/ApiService";
 
 function Dashboard() {
+    const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        const fetchFiles = async () => {
+            const result = await getAllFiles();
+
+            if (!result.success) {
+                alert(result.error);
+            }
+            else {
+                setFiles(result.files.slice(0, 12));
+            }
+        };
+
+        fetchFiles();
+    }, []);
+
     return (
         <div className="flex-1 h-screen bg-[#F1FFFB] p-20">
             <div className="w-full h-40">
@@ -8,10 +27,12 @@ function Dashboard() {
                 <p className=" text-[#555555]">Latest uploaded Content</p>
             </div>
             <div className="w-full flex flex-row justify-between">
-                <FileItem/>
-                <FileItem/>
+                {files.map((file) => (
+                    <FileItem key={file.id} file={file} showOptions={false}/>
+                ))}
             </div>
         </div>
     );
 }
+
 export default Dashboard;

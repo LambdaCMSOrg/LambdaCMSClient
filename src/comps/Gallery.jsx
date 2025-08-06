@@ -48,7 +48,7 @@ export default function Gallery() {
             </div>
             <div className="grid grid-cols-4 gap-6">
                 {files.map((file) => (
-                    <FileItem key={file.id} file={file} onDelete={handleDeleteFromParent}/>
+                    <FileItem key={file.id} file={file} showOptions={true} onDelete={handleDeleteFromParent}/>
                 ))}
             </div>
             {showUpload && (
