@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {renameImage, getThumbnailUrl, getImageBlobUrl, deleteImage} from "../../common/ApiService";
+import {renameFile, getImageThumbnailUrl, getImageBlobUrl, deleteFile} from "../../common/ApiService";
 import FileRenameDialogue from "./FileRenameDialogue";
 import OptionsMenu from "./OptionsMenu";
 
@@ -9,7 +9,7 @@ export default function FileItem({ file = {}, onDelete }) {
     const [isRenaming, setIsRenaming] = useState(false);
 
     const handleRename = async function(newName) {
-        const result = await renameImage(file.id, newName);
+        const result = await renameFile(file.id, newName);
 
         setIsRenaming(false);
 
@@ -25,7 +25,7 @@ export default function FileItem({ file = {}, onDelete }) {
 
     useEffect(() => {
         const loadThumbnailUrl = async () => {
-            const result = await getThumbnailUrl(file.id);
+            const result = await getImageThumbnailUrl(file.id);
 
             if (!result.success) {
                 alert(result.error);
@@ -55,7 +55,7 @@ export default function FileItem({ file = {}, onDelete }) {
     const handleDelete = async (e) => {
         e.stopPropagation();
 
-        const result = await deleteImage(file.id);
+        const result = await deleteFile(file.id);
 
         if (!result.success) {
             alert(result.error);

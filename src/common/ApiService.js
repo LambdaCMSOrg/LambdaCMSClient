@@ -14,23 +14,27 @@ export function hasValidToken() {
     return getAccessToken() !== null && !isTokenExpired();
 }
 
-export async function getAllImages() {
-    return await Api.getAllImages(await getOrAcquireToken());
+export async function getAllFiles() {
+    return await Api.getAllFiles(await getOrAcquireToken());
 }
 
-export async function uploadImage(files) {
-    return await Api.uploadImage(await getOrAcquireToken(), files);
+export async function uploadFile(file) {
+    return await Api.uploadFile(await getOrAcquireToken(), file);
 }
 
-export async function renameImage(fileId, newFilename) {
-    return await Api.renameImage(await getOrAcquireToken(), fileId, newFilename);
+export async function renameFile(fileId, newFilename) {
+    return await Api.renameFile(await getOrAcquireToken(), fileId, newFilename);
 }
 
-export async function getThumbnailUrl(fileId) {
+export async function deleteFile(fileId) {
+    return await Api.deleteFile(await getOrAcquireToken(), fileId);
+}
+
+export async function getImageThumbnailUrl(fileId) {
     const nowUnixSeconds = Math.floor(Date.now() / 1000);
 
     if (!getThumbnailUrlData() || getThumbnailUrlData().expiresAt < nowUnixSeconds) {
-        const result = await Api.getThumbnailUrl(await getOrAcquireToken(), fileId);
+        const result = await Api.getImageThumbnailUrl(await getOrAcquireToken(), fileId);
 
         if (!result.success) {
             return result;
@@ -44,10 +48,6 @@ export async function getThumbnailUrl(fileId) {
 
 export async function getImageBlobUrl(fileId) {
     return await Api.getImageBlobUrl(await getOrAcquireToken(), fileId);
-}
-
-export async function deleteImage(fileId) {
-    return await Api.deleteImage(await getOrAcquireToken(), fileId);
 }
 
 export async function login(email, password) {

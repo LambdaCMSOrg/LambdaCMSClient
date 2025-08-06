@@ -1,8 +1,8 @@
 export const serverAddress = "localhost";
 export const port = 5158;
 
-export async function getAllImages(token) {
-    const result = await apiFetch('api/image', "GET", null, null, true, token);
+export async function getAllFiles(token) {
+    const result = await apiFetch('api/content', "GET", null, null, true, token);
 
     if (!result.success) {
         return result;
@@ -13,26 +13,36 @@ export async function getAllImages(token) {
     return { success: true, files: data };
 }
 
-export async function uploadImage(token, files) {
-    const formData = new FormData();
-
-    for (const file of files) {
-        formData.append("Name", file.name);
-        formData.append("File", file);
-    }
-
-    const result = await apiFetch('api/image', "POST", null, formData, true, token);
+export async function getFile(token, fileId) {
+    const result = await apiFetch(`api/content/${fileId}`, "GET", null, null, true, token);
 
     if (!result.success) {
         return result;
     }
 
     const data = await result.result.json();
-    return { success: true, files: Array.isArray(data) ? data : [data]};
+
+    return { success: true, file: data };
 }
 
-export async function renameImage(token, fileId, newFilename) {
-    const endpoint = `api/image/${fileId}/rename?newName=${encodeURIComponent(newFilename)}`;
+export async function uploadFile(token, file) {
+    const formData = new FormData();
+
+    formData.append("File", file);
+
+    const result = await apiFetch(`api/content?Name=${file.name}`, "POST", null, formData, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, file: data };
+}
+
+export async function renameFile(token, fileId, newFilename) {
+    const endpoint = `api/content/${fileId}/rename?newName=${encodeURIComponent(newFilename)}`;
 
     const result = await apiFetch(endpoint, "PATCH", null, null, true, token);
 
@@ -43,7 +53,19 @@ export async function renameImage(token, fileId, newFilename) {
     return { success: true };
 }
 
-export async function getThumbnailUrl(token) {
+export async function deleteFile(token, fileId) {
+    const endpoint = `api/content/${fileId}`;
+
+    const result = await apiFetch(endpoint, "DELETE", null, null, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+
+export async function getImageThumbnailUrl(token) {
     const endpoint = `file/image/thumbnail/request-url`;
 
     const result = await apiFetch(endpoint, "GET", "application/json", null, true, token);
@@ -70,18 +92,6 @@ export async function getImageBlobUrl(token, fileId) {
     const url = URL.createObjectURL(blob);
 
     return { success: true, url: url };
-}
-
-export async function deleteImage(token, fileId) {
-    const endpoint = `api/image/${fileId}`;
-
-    const result = await apiFetch(endpoint, "DELETE", null, null, true, token);
-
-    if (!result.success) {
-        return result;
-    }
-
-    return { success: true };
 }
 
 export async function login(email, password) {
