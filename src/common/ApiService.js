@@ -18,6 +18,10 @@ export async function getAllFiles() {
     return await Api.getAllFiles(await getOrAcquireToken());
 }
 
+export async function queryFiles(query) {
+    return await Api.queryFiles(await getOrAcquireToken(), query);
+}
+
 export async function uploadFile(file) {
     return await Api.uploadFile(await getOrAcquireToken(), file);
 }

@@ -1,13 +1,18 @@
 import FileItem from "./Items/FileItem.jsx";
 import {useEffect, useState} from "react";
-import {getAllFiles} from "../common/ApiService";
+import {queryFiles} from "../common/ApiService";
 
 function Dashboard() {
+    const fileQuery = {
+        "sortBy": "CreationTime",
+        "limit": 12
+    }
+
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
         const fetchFiles = async () => {
-            const result = await getAllFiles();
+            const result = await queryFiles(fileQuery);
 
             if (!result.success) {
                 alert(result.error);

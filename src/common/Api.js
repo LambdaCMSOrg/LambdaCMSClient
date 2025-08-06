@@ -13,6 +13,19 @@ export async function getAllFiles(token) {
     return { success: true, files: data };
 }
 
+export async function queryFiles(token, query) {
+    const result = await apiFetch('api/content/query', "POST", "application/json",
+        JSON.stringify(query), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, files: data };
+}
+
 export async function getFile(token, fileId) {
     const result = await apiFetch(`api/content/${fileId}`, "GET", null, null, true, token);
 
