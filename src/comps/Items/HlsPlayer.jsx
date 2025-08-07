@@ -31,7 +31,6 @@ export default function HlsPlayer({ videoUrl }) {
 
         if (Hls.isSupported()) {
             hls = new Hls({
-                debug: true,
                 xhrSetup: (xhr) => {
                     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
                 }
