@@ -10,8 +10,38 @@ const accessTokenExpireTimeMinutes = 15;
 
 let refreshPromise = null;
 
+let hasInterval = false;
+
+const subscribers = new Set();
+
+export function subscribe(callback) {
+    subscribers.add(callback);
+
+    if (!hasInterval) {
+        setInterval(() => {
+            getOrAcquireToken().catch(console.error);
+        }, 14 * 60 * 1000);
+
+        hasInterval = true;
+    }
+
+    // Immediately notify the new subscriber with the current token
+    if (hasValidToken()) {
+        callback(getAccessToken());
+    }
+
+    // Return an unsubscribe function
+    return () => {
+        subscribers.delete(callback);
+    };
+}
+
 export function hasValidToken() {
     return getAccessToken() !== null && !isTokenExpired();
+}
+
+export async function getToken() {
+    return await getOrAcquireToken();
 }
 
 export async function getAllFiles() {
@@ -34,11 +64,11 @@ export async function deleteFile(fileId) {
     return await Api.deleteFile(await getOrAcquireToken(), fileId);
 }
 
-export async function getImageThumbnailUrl(fileId) {
+export async function getThumbnailUrl(fileId) {
     const nowUnixSeconds = Math.floor(Date.now() / 1000);
 
     if (!getThumbnailUrlData() || getThumbnailUrlData().expiresAt < nowUnixSeconds) {
-        const result = await Api.getImageThumbnailUrl(await getOrAcquireToken(), fileId);
+        const result = await Api.getThumbnailUrl(await getOrAcquireToken(), fileId);
 
         if (!result.success) {
             return result;
@@ -47,11 +77,15 @@ export async function getImageThumbnailUrl(fileId) {
         setThumbnailUrlData(result.expiresAt, result.token);
     }
 
-    return { success: true, url: constructUrl(`file/image/thumbnail/${fileId}?expiresAt=${getThumbnailUrlData().expiresAt}&token=${encodeURIComponent(getThumbnailUrlData().token)}`)};
+    return { success: true, url: constructUrl(`api/content/thumbnail/${fileId}?expiresAt=${getThumbnailUrlData().expiresAt}&token=${encodeURIComponent(getThumbnailUrlData().token)}`)};
 }
 
 export async function getImageBlobUrl(fileId) {
     return await Api.getImageBlobUrl(await getOrAcquireToken(), fileId);
+}
+
+export async function getVideoHlsStreamUrl(fileId) {
+    return Api.getVideoHlsStreamUrl(await getOrAcquireToken(), fileId);
 }
 
 export async function login(email, password) {
@@ -119,6 +153,8 @@ async function getOrAcquireToken() {
 
                     setTokenExpireTimestamp(new Date(Date.now() + accessTokenExpireTimeMinutes * 60 * 1000));
                     setAccessToken(result.token);
+
+                    subscribers.forEach(callback => callback(getAccessToken()));
 
                     refreshPromise = null;
                     return result.token;

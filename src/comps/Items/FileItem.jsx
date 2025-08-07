@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import {renameFile, getImageThumbnailUrl, getImageBlobUrl, deleteFile} from "../../common/ApiService";
+import {renameFile, getThumbnailUrl, getImageBlobUrl, deleteFile, getVideoHlsStreamUrl} from "../../common/ApiService";
 import FileRenameDialogue from "./FileRenameDialogue";
 import OptionsMenu from "./OptionsMenu";
+import HlsPlayer from "./HlsPlayer";
 
 export default function FileItem({ file = {}, showOptions, onDelete }) {
-    const [previewUrl, setPreviewUrl] = useState(null);
+    const [fileUrl, setFileUrl] = useState(null);
     const [thumbnailUrl, setThumbnailUrl] = useState(null);
     const [isRenaming, setIsRenaming] = useState(false);
 
@@ -25,7 +26,7 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
 
     useEffect(() => {
         const loadThumbnailUrl = async () => {
-            const result = await getImageThumbnailUrl(file.id);
+            const result = await getThumbnailUrl(file.id);
 
             if (!result.success) {
                 alert(result.error);
@@ -42,14 +43,21 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
     const handleClick = async (e) => {
         e.preventDefault();
 
-        const result = await getImageBlobUrl(file.id);
+        let result;
+
+        if (file.fileType.category === 0) {
+            result = await getVideoHlsStreamUrl(file.id);
+        }
+        else if (file.fileType.category === 1) {
+            result = await getImageBlobUrl(file.id);
+        }
 
         if (!result.success) {
             alert(result.error);
             return;
         }
 
-        setPreviewUrl(result.url);
+        setFileUrl(result.url);
     };
 
     const handleDelete = async (e) => {
@@ -69,11 +77,12 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
 
     return(
         <>
-            {previewUrl && (
+            {fileUrl && (
                 <div className=" fixed inset-0 w-screen h-screen bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-xl shadow-lg">
-                        <img src={previewUrl} alt="Preview" className="max-w-[90vw] max-h-[80vh]" />
-                        <button onClick={() => setPreviewUrl(null)} className="mt-4 text-red-600">Close</button>
+                        {file.fileType.category === 1 && <img src={fileUrl} alt="Preview" className="max-w-[90vw] max-h-[80vh]"/>}
+                        {file.fileType.category === 0 && <HlsPlayer videoUrl={fileUrl}/>}
+                        <button onClick={() => setFileUrl(null)} className="mt-4 text-red-600">Close</button>
                     </div>
                 </div>
             )}

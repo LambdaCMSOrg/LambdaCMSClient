@@ -78,8 +78,8 @@ export async function deleteFile(token, fileId) {
     return { success: true };
 }
 
-export async function getImageThumbnailUrl(token) {
-    const endpoint = `file/image/thumbnail/request-url`;
+export async function getThumbnailUrl(token) {
+    const endpoint = `api/content/thumbnail/request-url`;
 
     const result = await apiFetch(endpoint, "GET", "application/json", null, true, token);
 
@@ -105,6 +105,10 @@ export async function getImageBlobUrl(token, fileId) {
     const url = URL.createObjectURL(blob);
 
     return { success: true, url: url };
+}
+
+export function getVideoHlsStreamUrl(token, fileId) {
+    return { success: true, url: constructUrl(`file/video/stream/${fileId}/${fileId}.m3u8`) };
 }
 
 export async function login(email, password) {
