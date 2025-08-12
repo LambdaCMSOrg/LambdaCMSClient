@@ -14,14 +14,12 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
 
         setIsRenaming(false);
 
-        console.log("Rename result: ", result);
-
         if (!result.success) {
             alert(result.error);
             return;
         }
 
-        window.location.reload();
+        file.name = newName;
     };
 
     useEffect(() => {
@@ -45,11 +43,14 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
 
         let result;
 
-        if (file.fileType.category === 0) {
+        if (file.fileType.category === "VIDEO") {
             result = await getVideoHlsStreamUrl(file.id);
         }
-        else if (file.fileType.category === 1) {
+        else if (file.fileType.category === "IMAGE") {
             result = await getImageBlobUrl(file.id);
+        }
+        else {
+            return;
         }
 
         if (!result.success) {
@@ -80,8 +81,8 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
             {fileUrl && (
                 <div className=" fixed inset-0 w-screen h-screen bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-xl shadow-lg">
-                        {file.fileType.category === 1 && <img src={fileUrl} alt="Preview" className="max-w-[90vw] max-h-[80vh]"/>}
-                        {file.fileType.category === 0 && <HlsPlayer videoUrl={fileUrl}/>}
+                        {file.fileType.category === "IMAGE" && <img src={fileUrl} alt="Preview" className="max-w-[90vw] max-h-[80vh]"/>}
+                        {file.fileType.category === "VIDEO" && <HlsPlayer videoUrl={fileUrl}/>}
                         <button onClick={() => setFileUrl(null)} className="mt-4 text-red-600">Close</button>
                     </div>
                 </div>

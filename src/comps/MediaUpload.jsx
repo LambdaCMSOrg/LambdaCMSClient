@@ -1,11 +1,11 @@
 import {useRef} from "react";
 import {uploadFile} from "../common/ApiService";
 
-function MediaUpload({ onClose, onUploadSuccess }) {
+function MediaUpload({ folder, onClose, onUploadSuccess }) {
     const fileInputRef = useRef();
 
     const handleUpload = async (file) => {
-        const result = await uploadFile(file);
+        const result = await uploadFile(file, folder);
 
         if (!result.success) {
             alert(result.error);
@@ -13,8 +13,6 @@ function MediaUpload({ onClose, onUploadSuccess }) {
         }
 
         onUploadSuccess(result.file);
-
-        onClose();
     };
 
     const handleDrop = async (e) => {

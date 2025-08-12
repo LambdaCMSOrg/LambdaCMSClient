@@ -44,16 +44,32 @@ export async function getToken() {
     return await getOrAcquireToken();
 }
 
-export async function getAllFiles() {
-    return await Api.getAllFiles(await getOrAcquireToken());
+export async function getFiles(folder = null) {
+    if (folder === undefined) {
+        folder = null;
+    }
+
+    return await Api.getFiles(await getOrAcquireToken(), folder);
 }
 
 export async function queryFiles(query) {
     return await Api.queryFiles(await getOrAcquireToken(), query);
 }
 
-export async function uploadFile(file) {
-    return await Api.uploadFile(await getOrAcquireToken(), file);
+export async function uploadFile(file, folder = null) {
+    if (folder === undefined) {
+        folder = null;
+    }
+
+    return await Api.uploadFile(await getOrAcquireToken(), file, folder);
+}
+
+export async function createFolder(name, folder = null) {
+    if (folder === undefined) {
+        folder = null;
+    }
+
+    return await Api.createFolder(await getOrAcquireToken(), name, folder);
 }
 
 export async function renameFile(fileId, newFilename) {

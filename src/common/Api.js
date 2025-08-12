@@ -1,8 +1,10 @@
 export const serverAddress = "localhost";
 export const port = 5158;
 
-export async function getAllFiles(token) {
-    const result = await apiFetch('api/content', "GET", null, null, true, token);
+export async function getFiles(token, folder) {
+    const qArg = folder ? `?parentId=${encodeURIComponent(folder)}` : "";
+
+    const result = await apiFetch(`api/content${qArg}`, "GET", null, null, true, token);
 
     if (!result.success) {
         return result;
@@ -38,12 +40,32 @@ export async function getFile(token, fileId) {
     return { success: true, file: data };
 }
 
-export async function uploadFile(token, file) {
+export async function uploadFile(token, file, folder) {
     const formData = new FormData();
 
     formData.append("File", file);
 
-    const result = await apiFetch(`api/content?Name=${file.name}`, "POST", null, formData, true, token);
+    const qArg = folder ? `&CreateDto.ParentId=${encodeURIComponent(folder)}` : "";
+
+    const result = await apiFetch(`api/content?CreateDto.Name=${file.name}${qArg}`, "POST", null, formData, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, file: data };
+}
+
+export async function createFolder(token, name, folder) {
+    const requestData = {
+        "name": name,
+        "parentId": folder
+    }
+
+    console.log(requestData);
+    const result = await apiFetch(`api/content/folder`, "POST", "application/json", JSON.stringify(requestData), true, token);
 
     if (!result.success) {
         return result;

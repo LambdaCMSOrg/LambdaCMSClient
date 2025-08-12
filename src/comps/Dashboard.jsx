@@ -4,7 +4,9 @@ import {queryFiles} from "../common/ApiService";
 
 function Dashboard() {
     const fileQuery = {
-        "sortBy": "CreationTime",
+        "sortBy": {
+            "sortByCreationDate": true
+        },
         "limit": 12
     }
 
@@ -23,7 +25,7 @@ function Dashboard() {
         };
 
         fetchFiles();
-    }, []);
+    });
 
     return (
         <div className="flex-1 h-screen bg-[#F1FFFB] p-20">
