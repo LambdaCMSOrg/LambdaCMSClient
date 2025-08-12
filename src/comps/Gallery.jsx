@@ -68,7 +68,7 @@ export default function Gallery() {
     }, [folderStack]);
 
     return (
-        <div className="flex-1 h-screen bg-[#F1FFFB] p-20">
+        <div className="flex-1 flex flex-col h-screen bg-[#F1FFFB] p-20">
             <div className="w-full h-40 flex justify-between">
                 <div className="">
                     <h2 className="text-[34px] font-bold text-[#444444]">Gallery</h2>
@@ -85,15 +85,15 @@ export default function Gallery() {
                     </button>
                 </div>
             </div>
-            <div className="grid grid-cols-4 gap-6">
+            <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 mt-6">
                 {folderStack.length > 0 && (
                     <FolderCloseItem key={folderStack[folderStack.length - 1]} onCloseFolder={handleCloseFolder}/>
                 )}
 
                 {files.map((file) => (
                     file.fileType.category === "FOLDER"
-                    ? <FolderItem key={file.id} file={file} showOptions={true} onOpen={handleOpenFolder} onDelete={handleDeleteFromParent}/>
-                    : <FileItem key={file.id} file={file} showOptions={true} onDelete={handleDeleteFromParent}/>
+                        ? <FolderItem key={file.id} file={file} showOptions={true} onOpen={handleOpenFolder} onDelete={handleDeleteFromParent}/>
+                        : <FileItem key={file.id} file={file} showOptions={true} onDelete={handleDeleteFromParent}/>
                 ))}
             </div>
             {showUpload && (

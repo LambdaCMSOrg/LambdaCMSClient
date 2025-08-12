@@ -10,28 +10,30 @@ function Layout() {
     const hideSidebar = location.pathname === "/login";
 
     return (
-        <div className="flex">
+        <div className="flex h-screen">
             {!hideSidebar && <Sidebar />}
 
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/gallery"
-                    element={
-                        <ProtectedRoute>
-                            <Gallery />
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
+            <div className="flex-1 overflow-auto">
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/gallery"
+                        element={
+                            <ProtectedRoute>
+                                <Gallery />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </div>
         </div>
     );
 }

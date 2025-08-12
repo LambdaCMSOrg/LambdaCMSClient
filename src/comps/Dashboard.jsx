@@ -1,6 +1,7 @@
 import FileItem from "./Items/FileItem.jsx";
 import {useEffect, useState} from "react";
 import {queryFiles} from "../common/ApiService";
+import FolderItem from "./Items/FolderItem";
 
 function Dashboard() {
     const fileQuery = {
@@ -28,14 +29,16 @@ function Dashboard() {
     });
 
     return (
-        <div className="flex-1 h-screen bg-[#F1FFFB] p-20">
+        <div className="flex-1 bg-[#F1FFFB] p-10 overflow-auto">
             <div className="w-full h-40">
                 <h2 className="text-[34px] font-bold text-[#444444]">Dashboard</h2>
                 <p className=" text-[#555555]">Latest uploaded Content</p>
             </div>
-            <div className="w-full flex flex-row justify-between">
+            <div className="w-full flex flex-wrap justify-between gap-4">
                 {files.map((file) => (
-                    <FileItem key={file.id} file={file} showOptions={false}/>
+                    file.fileType.category === "FOLDER"
+                        ? <FolderItem key={file.id} file={file} onOpen={() => alert("Cannot open folders in the Dashboard.")}/>
+                        : <FileItem key={file.id} file={file}/>
                 ))}
             </div>
         </div>

@@ -23,7 +23,7 @@ function Sidebar() {
     ];
 
     return(
-        <div className="w-[300px] h-screen bg-[#09797A]">
+        <div className="w-[250px] h-screen bg-[#09797A] flex flex-col justify-between">
             <div className="w-full h-[200px] flex items-center justify-center">
                 <h2 className="text-[30px] font-extrabold text-[#ffffff]">Lambda CMS</h2>
             </div>
