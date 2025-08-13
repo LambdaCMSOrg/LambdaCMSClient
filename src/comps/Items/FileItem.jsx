@@ -3,11 +3,15 @@ import {renameFile, getThumbnailUrl, getImageBlobUrl, deleteFile, getVideoHlsStr
 import FileRenameDialogue from "./FileRenameDialogue";
 import OptionsMenu from "./OptionsMenu";
 import HlsPlayer from "./HlsPlayer";
+import {ChatBubbleBottomCenterTextIcon} from "@heroicons/react/24/solid";
+import {FileCommentView} from "./FileCommentView";
 
 export default function FileItem({ file = {}, showOptions, onDelete }) {
     const [fileUrl, setFileUrl] = useState(null);
     const [thumbnailUrl, setThumbnailUrl] = useState(null);
+
     const [isRenaming, setIsRenaming] = useState(false);
+    const [showingComments, setShowingComments] = useState(false);
 
     const handleRename = async function(newName) {
         const result = await renameFile(file.id, newName);
@@ -37,8 +41,7 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
         loadThumbnailUrl();
     }, [file.id]);
 
-
-    const handleClick = async (e) => {
+    const handleCardClick = async (e) => {
         e.preventDefault();
 
         let result;
@@ -60,6 +63,12 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
 
         setFileUrl(result.url);
     };
+
+    const handleCommentClick = (e) => {
+        e.stopPropagation();
+
+        setShowingComments(true);
+    }
 
     const handleDelete = async (e) => {
         e.stopPropagation();
@@ -87,19 +96,22 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
                     </div>
                 </div>
             )}
-            <div className="w-[330px] h-[225px] bg-[#ffffff] cursor-pointer rounded-3xl border-2 border-gray-200 flex flex-col items-center transition-transform duration-200 hover:scale-110"
-                 onClick={handleClick}>
-                <div className=" relative w-[270px] h-[60px] bg-[#ffffff] rounded-3xl flex flex-row items-center justify-between">
+            <div className="w-[330px] h-[225px] bg-[#ffffff] cursor-pointer rounded-3xl border-2 border-gray-200 flex flex-col items-center transition-transform duration-200 hover:scale-110 relative" onClick={handleCardClick}>
+                <div className="w-[270px] h-[60px] bg-[#ffffff] rounded-3xl flex flex-row items-center justify-between">
                     <h3 className="text-[#323232] text-[19px]">{file.name || "Unnamed file"}</h3>
 
                     {showOptions && <OptionsMenu handleDelete={handleDelete} setIsRenaming={setIsRenaming}/>}
                 </div>
-                <div className="bg-[#CFEFD4] w-[270px] h-[135px] rounded-3xl ">
+                <div className="relative bg-[#CFEFD4] w-[270px] h-[135px] rounded-3xl overflow-hidden">
                     {thumbnailUrl ? (<img src={thumbnailUrl} alt="File preview" className="w-full h-full object-cover"/>) :
                         (<span className="text-sm text-gray-600">No preview</span>)}
                 </div>
+                <button onClick={handleCommentClick} className="absolute bottom-2 right-2 bg-blue-600 text-white px-2 py-1 rounded-full text-sm shadow">
+                    <ChatBubbleBottomCenterTextIcon className="w-5 h-5"/>
+                </button>
             </div>
             {isRenaming && <FileRenameDialogue name={file.name} handleRename={handleRename} setIsRenaming={setIsRenaming} />}
+            {showingComments && <FileCommentView file={file} onClose={() => setShowingComments(false)}/>}
         </>
     );
 }

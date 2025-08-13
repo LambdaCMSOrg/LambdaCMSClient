@@ -14,6 +14,7 @@ let hasInterval = false;
 
 const subscribers = new Set();
 
+// region Utility
 export function subscribe(callback) {
     subscribers.add(callback);
 
@@ -40,10 +41,16 @@ export function hasValidToken() {
     return getAccessToken() !== null && !isTokenExpired();
 }
 
+export function isUserId(id) {
+    return getUserId() === id;
+}
+
 export async function getToken() {
     return await getOrAcquireToken();
 }
+// endregion
 
+// region Files
 export async function getFiles(folder = null) {
     if (folder === undefined) {
         folder = null;
@@ -103,7 +110,27 @@ export async function getImageBlobUrl(fileId) {
 export async function getVideoHlsStreamUrl(fileId) {
     return Api.getVideoHlsStreamUrl(await getOrAcquireToken(), fileId);
 }
+// endregion
 
+// region Comments
+export async function getComments(fileId) {
+    return await Api.getComments(await getOrAcquireToken(), fileId);
+}
+
+export async function postComment(fileId, comment) {
+    return await Api.postComment(await getOrAcquireToken(), fileId, comment);
+}
+
+export async function updateComment(commentId, newComment) {
+    return await Api.updateComment(await getOrAcquireToken(), commentId, newComment);
+}
+
+export async function deleteComment(commentId) {
+    return await Api.deleteComment(await getOrAcquireToken(), commentId);
+}
+// endregion
+
+// region User/Auth
 export async function login(email, password) {
     const result = await Api.login(email, password);
 
@@ -118,7 +145,9 @@ export async function login(email, password) {
 
     return { success: true };
 }
+// endregion
 
+// region Getter/Setter
 function getAccessToken() {
     return sessionStorage.getItem(accessTokenKey);
 }
@@ -153,6 +182,7 @@ function getTokenExpireTimestamp() {
 function setTokenExpireTimestamp(timestamp) {
     sessionStorage.setItem(tokenExpireTimestampKey, timestamp.toISOString());
 }
+// endregion
 
 async function getOrAcquireToken() {
     if (getAccessToken() && !isTokenExpired()) {

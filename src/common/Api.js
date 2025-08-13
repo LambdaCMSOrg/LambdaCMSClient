@@ -1,6 +1,7 @@
 export const serverAddress = "localhost";
 export const port = 5158;
 
+// region Files
 export async function getFiles(token, folder) {
     const qArg = folder ? `?parentId=${encodeURIComponent(folder)}` : "";
 
@@ -132,7 +133,65 @@ export async function getImageBlobUrl(token, fileId) {
 export function getVideoHlsStreamUrl(token, fileId) {
     return { success: true, url: constructUrl(`file/video/stream/${fileId}/${fileId}.m3u8`) };
 }
+// endregion
 
+// region Comments
+export async function getComments(token, fileId) {
+    const result = await apiFetch(`api/content/comments/for-file/${fileId}`, "GET", null, null, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, comments: data };
+}
+
+export async function postComment(token, fileId, comment) {
+    const requestData = {
+        "fileId": fileId,
+        "comment": comment
+    }
+
+    const result = await apiFetch('api/content/comments', "POST", "application/json",
+        JSON.stringify(requestData), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, comment: data };
+}
+
+export async function updateComment(token, commentId, newComment) {
+    const endpoint = `api/content/comments/${commentId}`;
+
+    const result = await apiFetch(endpoint, "PATCH", "application/json", JSON.stringify(newComment), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+
+export async function deleteComment(token, commentId) {
+    const endpoint = `api/content/comments/${commentId}`;
+
+    const result = await apiFetch(endpoint, "DELETE", null, null, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+// endregion
+
+// region User/Auth
 export async function login(email, password) {
     const result = await apiFetch('api/auth/login', "POST",
         "application/json", JSON.stringify({ email, password }), false, null);
@@ -158,6 +217,7 @@ export async function refreshAccessToken(userId) {
 
     return { success: true, token: data.token };
 }
+// endregion
 
 async function apiFetch(endpoint, method, contentType, body, authorize, token) {
     const headers = {}
