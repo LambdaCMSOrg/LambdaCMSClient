@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFolder } from "../../common/ApiService";
+import { createFolder } from "../../../../common/ApiService";
 
 export default function CreateFolderDialogue({ folder, onSuccess, onClose }) {
     const [name, setName] = useState("");

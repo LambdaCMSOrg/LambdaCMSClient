@@ -1,12 +1,12 @@
 import {ArrowUpTrayIcon, FolderPlusIcon} from "@heroicons/react/24/solid";
 
-import FileItem from "./Items/FileItem.jsx";
-import MediaUpload from "./MediaUpload.jsx";
+import FileItem from "./FileComponents/FileItem.jsx";
+import MediaUploadDialogue from "./FileComponents/Dialogues/MediaUploadDialogue.jsx";
 import {useState, useEffect} from "react";
-import {getFiles} from "../common/ApiService";
-import FolderItem from "./Items/FolderItem";
-import FolderCloseItem from "./Items/FolderCloseItem";
-import CreateFolderDialogue from "./Items/CreateFolderDialogue";
+import {getFiles} from "../../common/ApiService";
+import FolderItem from "./FileComponents/FolderItem";
+import FolderCloseItem from "./FileComponents/FolderCloseItem";
+import CreateFolderDialogue from "./FileComponents/Dialogues/CreateFolderDialogue";
 
 export default function Gallery() {
     const [showUpload, setShowUpload] = useState(false);
@@ -97,7 +97,7 @@ export default function Gallery() {
                 ))}
             </div>
             {showUpload && (
-                <MediaUpload folder={folderStack.length > 0 ? folderStack[folderStack.length - 1] : null} onClose={() => setShowUpload(false)} onUploadSuccess={handleUploadSuccess}/>
+                <MediaUploadDialogue folder={folderStack.length > 0 ? folderStack[folderStack.length - 1] : null} onClose={() => setShowUpload(false)} onUploadSuccess={handleUploadSuccess}/>
             )}
             {createFolder && (
                 <CreateFolderDialogue folder={folderStack.length > 0 ? folderStack[folderStack.length - 1] : null} onClose={() => setCreateFolder(false)} onSuccess={handleCreateFolderSuccess}/>

@@ -1,7 +1,7 @@
-import FileItem from "./Items/FileItem.jsx";
+import FileItem from "./FileComponents/FileItem.jsx";
 import {useEffect, useState} from "react";
-import {queryFiles} from "../common/ApiService";
-import FolderItem from "./Items/FolderItem";
+import {queryFiles} from "../../common/ApiService";
+import FolderItem from "./FileComponents/FolderItem";
 
 function Dashboard() {
     const fileQuery = {

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Hls from 'hls.js';
-import {getToken, subscribe} from "../../common/ApiService";
+import {getToken, subscribe} from "../../../common/ApiService";
 
 export default function HlsPlayer({ videoUrl }) {
     const videoRef = useRef(null);

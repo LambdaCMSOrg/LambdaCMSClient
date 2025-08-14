@@ -1,7 +1,7 @@
 import { FolderIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import {renameFile, deleteFile} from "../../common/ApiService";
-import FileRenameDialogue from "./FileRenameDialogue";
+import {renameFile, deleteFile} from "../../../common/ApiService";
+import FileRenameDialogue from "./Dialogues/FileRenameDialogue";
 import OptionsMenu from "./OptionsMenu";
 
 export default function FolderItem({ file = {}, showOptions, onOpen, onDelete }) {

@@ -1,7 +1,7 @@
-import {isUserId, updateComment} from "../../common/ApiService";
+import {isUserId, updateComment} from "../../../common/ApiService";
 import {useEffect, useRef, useState} from "react";
 import {EllipsisHorizontalIcon} from "@heroicons/react/24/solid";
-import CommentEditDialogue from "./CommentEditDialogue";
+import CommentEditDialogue from "./Dialogues/CommentEditDialogue";
 
 export function FileComment({ comment, index, onDelete }) {
     const dropdownRef = useRef(null);

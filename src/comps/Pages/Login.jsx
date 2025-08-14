@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {login} from "../common/ApiService";
+import {login} from "../../common/ApiService";
 
 function Login() {
     const [email, setEmail] = useState("");

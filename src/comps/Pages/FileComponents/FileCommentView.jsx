@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {getComments, postComment, deleteComment} from "../../common/ApiService";
+import {getComments, postComment, deleteComment} from "../../../common/ApiService";
 import {FileComment} from "./FileComment";
 
 export function FileCommentView({file, onClose}) {

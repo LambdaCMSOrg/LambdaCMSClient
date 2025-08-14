@@ -1,7 +1,7 @@
 import {useRef} from "react";
-import {uploadFile} from "../common/ApiService";
+import {uploadFile} from "../../../../common/ApiService";
 
-function MediaUpload({ folder, onClose, onUploadSuccess }) {
+function MediaUploadDialogue({ folder, onClose, onUploadSuccess }) {
     const fileInputRef = useRef();
 
     const handleUpload = async (file) => {
@@ -54,4 +54,4 @@ function MediaUpload({ folder, onClose, onUploadSuccess }) {
     );
 }
 
-export default MediaUpload;
+export default MediaUploadDialogue;

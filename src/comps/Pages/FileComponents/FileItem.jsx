@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import {renameFile, getThumbnailUrl, getImageBlobUrl, deleteFile, getVideoHlsStreamUrl} from "../../common/ApiService";
-import FileRenameDialogue from "./FileRenameDialogue";
+import {renameFile, getThumbnailUrl, getImageBlobUrl, deleteFile, getVideoHlsStreamUrl} from "../../../common/ApiService";
+import FileRenameDialogue from "./Dialogues/FileRenameDialogue";
 import OptionsMenu from "./OptionsMenu";
 import HlsPlayer from "./HlsPlayer";
 import {ChatBubbleBottomCenterTextIcon} from "@heroicons/react/24/solid";
