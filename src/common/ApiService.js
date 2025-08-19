@@ -2,7 +2,7 @@ import * as Api from "./Api.js";
 import {port, serverAddress} from "./Api.js";
 
 const accessTokenKey = "accessToken";
-const userIdKey = "userId";
+const userInfoKey = "userId";
 const tokenExpireTimestampKey = "tokenExpireTimestamp";
 const thumbUrlDataKey = "thumbUrlData";
 
@@ -42,7 +42,11 @@ export function hasValidToken() {
 }
 
 export function isUserId(id) {
-    return getUserId() === id;
+    return getUserInfo() !== null && getUserInfo().id === id;
+}
+
+export function isCurrentUserAdmin() {
+    return getUserInfo() !== null && getUserInfo().role === "ADMIN";
 }
 
 export async function getToken() {
@@ -50,7 +54,7 @@ export async function getToken() {
 }
 // endregion
 
-// region Files
+// region FileComponents
 export async function getFiles(folder = null) {
     if (folder === undefined) {
         folder = null;
@@ -130,7 +134,37 @@ export async function deleteComment(commentId) {
 }
 // endregion
 
-// region User/Auth
+// region User
+export async function createUser(username, email, password, role) {
+    return await Api.createUser(await getOrAcquireToken(), username, email, password, role);
+}
+
+export async function getUsers() {
+    return await Api.getUsers(await getOrAcquireToken());
+}
+
+export async function updateUser(userId, username, email, role) {
+    return await Api.updateUser(await getOrAcquireToken(), userId, username, email, role);
+}
+
+export async function updateUsername(userId, newUsername) {
+    return await Api.updateUsername(await getOrAcquireToken(), userId, newUsername);
+}
+
+export async function updateEmail(userId, newEmail) {
+    return await Api.updateEmail(await getOrAcquireToken(), userId, newEmail);
+}
+
+export async function updateRole(userId, newRole) {
+    return await Api.updateRole(await getOrAcquireToken(), userId, newRole);
+}
+
+export async function deleteUser(userId) {
+    return await Api.deleteUser(await getOrAcquireToken(), userId);
+}
+// endregion
+
+// region Auth
 export async function login(email, password) {
     const result = await Api.login(email, password);
 
@@ -139,7 +173,7 @@ export async function login(email, password) {
     }
 
     setAccessToken(result.token);
-    setUserId(result.userId);
+    setUserInfo(result.userInfo);
 
     setTokenExpireTimestamp(new Date(Date.now() + accessTokenExpireTimeMinutes * 60 * 1000));
 
@@ -156,12 +190,13 @@ function setAccessToken(accessToken) {
    sessionStorage.setItem(accessTokenKey, accessToken);
 }
 
-function getUserId() {
-    return sessionStorage.getItem(userIdKey);
+function getUserInfo() {
+    const raw = sessionStorage.getItem(userInfoKey);
+    return raw ? JSON.parse(raw) : null;
 }
 
-function setUserId(userId) {
-    sessionStorage.setItem(userIdKey, userId);
+function setUserInfo(userInfo) {
+    sessionStorage.setItem(userInfoKey, JSON.stringify(userInfo));
 }
 
 function getThumbnailUrlData() {
@@ -188,9 +223,9 @@ async function getOrAcquireToken() {
     if (getAccessToken() && !isTokenExpired()) {
         return getAccessToken();
     }
-    else if (getUserId()) {
+    else if (getUserInfo().id) {
         if (!refreshPromise) {
-            refreshPromise = Api.refreshAccessToken(getUserId())
+            refreshPromise = Api.refreshAccessToken(getUserInfo().id)
                 .then(result => {
                     if (!result.success) {
                         refreshPromise = null;

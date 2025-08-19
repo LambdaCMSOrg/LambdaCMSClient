@@ -7,6 +7,8 @@ import {
     ArrowLeftStartOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import SidebarButton from "./SidebarButton";
+import {isCurrentUserAdmin} from "../common/ApiService";
+import {ShieldCheckIcon} from "@heroicons/react/24/solid";
 
 function Sidebar() {
 
@@ -16,6 +18,10 @@ function Sidebar() {
         {label: 'Activity', icon: ChartBarIcon, to: '/activity'},
         {label: 'Gallery', icon: PhotoIcon, to: '/gallery'},
     ];
+
+    if (isCurrentUserAdmin()) {
+        mainButtons.push({label: 'Admin Panel', icon: ShieldCheckIcon, to: '/admin'});
+    }
 
     const bottomButtons = [
         {label: 'Settings', icon: Cog8ToothIcon},

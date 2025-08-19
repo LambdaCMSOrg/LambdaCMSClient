@@ -1,9 +1,11 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import Dashboard from "./Dashboard";
-import Gallery from "./Gallery";
-import Login from "./Login";
-import ProtectedRoute from "./ProtectedRoute";
+import Dashboard from "./Pages/Dashboard";
+import Gallery from "./Pages/Gallery";
+import Login from "./Pages/Login";
+import ProtectedRoute from "./Routes/ProtectedRoute";
+import AdminProtectedRoute from "./Routes/AdminProtectedRoute";
+import {AdminPanel} from "./Pages/AdminPanel";
 
 function Layout() {
     const location = useLocation();
@@ -15,23 +17,27 @@ function Layout() {
 
             <div className="flex-1 overflow-auto">
                 <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/gallery"
-                        element={
-                            <ProtectedRoute>
-                                <Gallery />
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path="/login" element={
+                        <Login />
+                    }/>
+
+                    <Route path="/" element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path="/gallery" element={
+                        <ProtectedRoute>
+                            <Gallery />
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path="/admin" element={
+                        <AdminProtectedRoute>
+                            <AdminPanel />
+                        </AdminProtectedRoute>
+                    }/>
                 </Routes>
             </div>
         </div>

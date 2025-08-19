@@ -1,7 +1,7 @@
 export const serverAddress = "localhost";
 export const port = 5158;
 
-// region Files
+// region FileComponents
 export async function getFiles(token, folder) {
     const qArg = folder ? `?parentId=${encodeURIComponent(folder)}` : "";
 
@@ -191,7 +191,109 @@ export async function deleteComment(token, commentId) {
 }
 // endregion
 
-// region User/Auth
+// region User
+export async function createUser(token, username, email, password, role) {
+    const requestData = {
+        "username": username,
+        "email": email,
+        "password": password,
+        "role": role,
+    }
+
+    const result = await apiFetch('api/user/create-user', "POST", "application/json",
+        JSON.stringify(requestData), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, user: data };
+}
+
+export async function getUsers(token) {
+    const result = await apiFetch(`api/user/all`, "GET", null, null, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, users: data };
+}
+
+export async function updateUser(token, userId, username, email, role) {
+    const requestData = {
+        "username": username !== null ? username : null,
+        "email": email !== null ? email : null,
+        "role": role !== null ? role : null,
+    }
+
+    const endpoint = `api/user/${userId}`;
+
+    const result = await apiFetch(endpoint, "PATCH", "application/json", JSON.stringify(requestData), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, user: data };
+}
+
+export async function updateUsername(token, userId, newUsername) {
+    const endpoint = `api/user/change-name/${userId}`;
+
+    const result = await apiFetch(endpoint, "PATCH", "application/json", JSON.stringify(newUsername), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+
+export async function updateEmail(token, userId, newEmail) {
+    const endpoint = `api/user/change-email/${userId}`;
+
+    const result = await apiFetch(endpoint, "PATCH", "application/json", JSON.stringify(newEmail), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+
+export async function updateRole(token, userId, newRole) {
+    const endpoint = `api/user/change-role/${userId}`;
+
+    const result = await apiFetch(endpoint, "PATCH", "application/json", JSON.stringify({ newRole }), true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+
+export async function deleteUser(token, userId) {
+    const endpoint = `api/user/${userId}`;
+
+    const result = await apiFetch(endpoint, "DELETE", null, null, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    return { success: true };
+}
+// endregion
+
+// region Auth
 export async function login(email, password) {
     const result = await apiFetch('api/auth/login', "POST",
         "application/json", JSON.stringify({ email, password }), false, null);
@@ -202,7 +304,7 @@ export async function login(email, password) {
 
     const data = await result.result.json();
 
-    return { success: true, token: data.token, refreshToken: data.refreshToken, userId: data.userId };
+    return { success: true, token: data.token, userInfo: data.userInfo };
 }
 
 export async function refreshAccessToken(userId) {
