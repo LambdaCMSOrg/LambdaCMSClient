@@ -14,13 +14,14 @@ function Sidebar() {
 
     const mainButtons = [
         {label: 'Dashboard', icon: Squares2X2Icon, to: '/'},
-        {label: 'User', icon: UserIcon, to: '/user'},
+        {label: 'Account', icon: UserIcon, to: '/account'},
         {label: 'Activity', icon: ChartBarIcon, to: '/activity'},
         {label: 'Gallery', icon: PhotoIcon, to: '/gallery'},
     ];
 
     if (isCurrentUserAdmin()) {
-        mainButtons.push({label: 'Admin Panel', icon: ShieldCheckIcon, to: '/admin'});
+        mainButtons.push({label: 'Admin Panel', icon: ShieldCheckIcon, to: '/admin/users'});
+        mainButtons.push({label: 'Audit Log', icon: ShieldCheckIcon, to: '/admin/audit'});
     }
 
     const bottomButtons = [

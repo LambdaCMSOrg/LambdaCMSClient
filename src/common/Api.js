@@ -293,6 +293,20 @@ export async function deleteUser(token, userId) {
 }
 // endregion
 
+// region Audit Logs
+export async function getAuditLogs(token, level) {
+    const result = await apiFetch(`api/audit-log?level=${level}`, "GET", null, null, true, token);
+
+    if (!result.success) {
+        return result;
+    }
+
+    const data = await result.result.json();
+
+    return { success: true, logs: data };
+}
+// endregion
+
 // region Auth
 export async function login(email, password) {
     const result = await apiFetch('api/auth/login', "POST",

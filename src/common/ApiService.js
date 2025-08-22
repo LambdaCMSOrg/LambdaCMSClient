@@ -164,6 +164,12 @@ export async function deleteUser(userId) {
 }
 // endregion
 
+// region Audit Logs
+export async function getAuditLogs(level = "Information") {
+    return await Api.getAuditLogs(await getOrAcquireToken(), level);
+}
+// endregion
+
 // region Auth
 export async function login(email, password) {
     const result = await Api.login(email, password);

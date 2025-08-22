@@ -6,6 +6,7 @@ import Login from "./Pages/Login";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import AdminProtectedRoute from "./Routes/AdminProtectedRoute";
 import {AdminPanel} from "./Pages/AdminPanel";
+import {LogPanel} from "./Pages/LogPanel";
 
 function Layout() {
     const location = useLocation();
@@ -33,7 +34,14 @@ function Layout() {
                         </ProtectedRoute>
                     }/>
 
-                    <Route path="/admin" element={
+                    <Route path="/admin/audit" element={
+                        <AdminProtectedRoute>
+                            <LogPanel />
+                        </AdminProtectedRoute>
+                    }>/
+                    </Route>
+
+                    <Route path="/admin/users" element={
                         <AdminProtectedRoute>
                             <AdminPanel />
                         </AdminProtectedRoute>
