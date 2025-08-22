@@ -4,6 +4,8 @@ import {LabeledCheckbox} from "../Utility/LabeledCheckbox";
 import {getAuditLogs} from "../../common/ApiService";
 
 export function LogPanel() {
+    const scrollRef = React.useRef(null);
+
     const [showInfo, setShowInfo] = React.useState(true);
     const [showWarning, setShowWarning] = React.useState(true);
     const [showError, setShowError] = React.useState(true);
@@ -43,6 +45,12 @@ export function LogPanel() {
         fetchLogs();
     }, [])
 
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [filteredLogs]);
+
     return (
         <div className="h-screen bg-[#F1FFFB]">
             <div className="mx-auto px-20 p-6">
@@ -59,7 +67,7 @@ export function LogPanel() {
                     </div>
                 </div>
 
-                <div className="bg-gray-600 text-gray-50 font-mono text-sm p-3 rounded shadow-inner max-h-[500px] overflow-y-auto">
+                <div ref={scrollRef} className="bg-gray-600 text-gray-50 font-mono text-sm p-3 rounded shadow-inner max-h-[500px] overflow-y-auto">
                     <div className="min-w-full p-4 flex flex-col gap-2">
                         { filteredLogs.map((entry) => <LogEntry key={entry.id} log={entry} />) }
                     </div>
