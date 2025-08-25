@@ -1,5 +1,7 @@
 export const serverAddress = "localhost";
-export const port = 5158;
+export const port = process.env.REACT_APP_API_PORT
+    ? parseInt(process.env.REACT_APP_API_PORT, 10)
+    : 5000;
 
 // region FileComponents
 export async function getFiles(token, folder) {
