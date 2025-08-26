@@ -34,7 +34,7 @@ function Dashboard() {
                 <h2 className="text-[34px] font-bold text-[#444444]">Dashboard</h2>
                 <p className=" text-[#555555]">Latest uploaded Content</p>
             </div>
-            <div className="w-full flex flex-wrap justify-between gap-4">
+            <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 mt-6 px-4 py-4">
                 {files.map((file) => (
                     file.fileType.category === "FOLDER"
                         ? <FolderItem key={file.id} file={file} onOpen={() => alert("Cannot open folders in the Dashboard.")}/>
