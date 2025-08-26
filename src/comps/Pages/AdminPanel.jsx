@@ -128,8 +128,8 @@ export function AdminPanel() {
 
     return (
         <div className="h-screen bg-[#F1FFFB]">
-            <div className="mx-auto px-20 p-6">
-                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="mx-auto px-24 py-20">
+                <div className="mb-24 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <h2 className="text-[34px] font-bold text-[#444444]">User Administration</h2>
                         <p className=" text-[#555555]">Create, edit, and remove users.</p>

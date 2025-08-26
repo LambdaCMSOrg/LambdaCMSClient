@@ -69,7 +69,7 @@ export default function Gallery() {
 
     return (
         <div className="flex-1 flex flex-col h-screen bg-[#F1FFFB] p-20">
-            <div className="w-full h-40 flex justify-between">
+            <div className="w-full h-40 flex justify-between px-4">
                 <div className="">
                     <h2 className="text-[34px] font-bold text-[#444444]">Gallery</h2>
                     <p className=" text-[#555555]">Upload your Content</p>
@@ -85,7 +85,7 @@ export default function Gallery() {
                     </button>
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 mt-6 px-4 py-4">
+            <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 px-4 py-4">
                 {folderStack.length > 0 && (
                     <FolderCloseItem key={folderStack[folderStack.length - 1]} onCloseFolder={handleCloseFolder}/>
                 )}
