@@ -29,7 +29,7 @@ function Dashboard() {
     });
 
     return (
-        <div className="flex-1 bg-[#F1FFFB] p-10 overflow-auto">
+        <div className="min-h-screen bg-[#F1FFFB] p-10 overflow-auto">
             <div className="w-full h-40">
                 <h2 className="text-[34px] font-bold text-[#444444]">Dashboard</h2>
                 <p className=" text-[#555555]">Latest uploaded Content</p>
