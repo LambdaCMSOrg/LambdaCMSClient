@@ -85,7 +85,7 @@ export default function Gallery() {
                     </button>
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 mt-6">
+            <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 mt-6 px-4 py-4">
                 {folderStack.length > 0 && (
                     <FolderCloseItem key={folderStack[folderStack.length - 1]} onCloseFolder={handleCloseFolder}/>
                 )}
