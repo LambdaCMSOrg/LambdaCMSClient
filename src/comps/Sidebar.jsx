@@ -7,20 +7,23 @@ import {
     ArrowLeftStartOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import SidebarButton from "./SidebarButton";
+import { useState } from "react";
 import {isCurrentUserAdmin} from "../common/ApiService";
 import {ShieldCheckIcon} from "@heroicons/react/24/solid";
+import SettingsWindow from "./SettingsWindow.jsx"
 
 function Sidebar() {
 
+    const [showSettings, setShowSettings] = useState(false);
+
     const mainButtons = [
         {label: 'Dashboard', icon: Squares2X2Icon, to: '/'},
-        {label: 'Account', icon: UserIcon, to: '/account'},
         {label: 'Activity', icon: ChartBarIcon, to: '/activity'},
         {label: 'Gallery', icon: PhotoIcon, to: '/gallery'},
     ];
 
     if (isCurrentUserAdmin()) {
-        mainButtons.push({label: 'Admin Panel', icon: ShieldCheckIcon, to: '/admin/users'});
+        mainButtons.push({label: 'Admin Panel', icon: UserIcon, to: '/admin'});
         mainButtons.push({label: 'Audit Log', icon: ShieldCheckIcon, to: '/admin/audit'});
     }
 
@@ -41,8 +44,21 @@ function Sidebar() {
             </div>
             <div className="w-full h-[400px] flex items-center justify-end flex-col ">
                 {bottomButtons.map(({label, icon}) => (
-                    <SidebarButton key={label} label={label} Icon={icon} className="" />
+                    <SidebarButton
+                        key={label}
+                        label={label}
+                        Icon={icon}
+                        className=""
+                        onClick={() => {
+                            if (label === "Settings") {
+                                setShowSettings(prev => !prev);
+                            }
+                        }}
+                    />
                 ))}
+                {showSettings && (
+                    <SettingsWindow onClose={() => setShowSettings(false)} />
+                )}
             </div>
         </div>
     );
