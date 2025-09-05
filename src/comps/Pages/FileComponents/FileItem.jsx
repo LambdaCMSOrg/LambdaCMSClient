@@ -88,21 +88,21 @@ export default function FileItem({ file = {}, showOptions, onDelete }) {
     return(
         <>
             {fileUrl && (
-                <div className=" fixed inset-0 w-screen h-screen bg-black bg-opacity-70 flex items-center justify-center z-50">
-                    <div className="bg-white p-4 rounded-xl shadow-lg">
+                <div className=" fixed inset-0 w-screen h-screen bg-[var(--color-bg)] bg-opacity-70 flex items-center justify-center z-50">
+                    <div className="bg-[var(--color-textP)] p-4 rounded-xl shadow-lg">
                         {file.fileType.category === "IMAGE" && <img src={fileUrl} alt="Preview" className="max-w-[90vw] max-h-[80vh]"/>}
                         {file.fileType.category === "VIDEO" && <HlsPlayer videoUrl={fileUrl}/>}
                         <button onClick={() => setFileUrl(null)} className="mt-4 text-red-600">Close</button>
                     </div>
                 </div>
             )}
-            <div className="w-[330px] h-[225px] bg-[#ffffff] cursor-pointer rounded-3xl border-2 border-gray-200 flex flex-col items-center transition-transform duration-200 hover:scale-110 relative" onClick={handleCardClick}>
-                <div className="w-[270px] h-[60px] bg-[#ffffff] rounded-3xl flex flex-row items-center justify-between">
-                    <h3 className="text-[#323232] text-[19px]">{file.name || "Unnamed file"}</h3>
+            <div className="w-[330px] h-[225px] bg-[var(--color-textF)] cursor-pointer rounded-3xl border-2 border-[var(--color-textBorder)] flex flex-col items-center transition-transform duration-200 hover:scale-110 relative" onClick={handleCardClick}>
+                <div className="w-[270px] h-[60px] bg-[var(--color-textF)] rounded-3xl flex flex-row items-center justify-between">
+                    <h3 className="text-[var(--color-textH1)] text-[19px]">{file.name || "Unnamed file"}</h3>
 
                     {showOptions && <OptionsMenu handleDelete={handleDelete} setIsRenaming={setIsRenaming}/>}
                 </div>
-                <div className="relative bg-[#CFEFD4] w-[270px] h-[135px] rounded-3xl overflow-hidden">
+                <div className="relative bg-[var(--color-textB)] w-[270px] h-[135px] rounded-3xl overflow-hidden">
                     {thumbnailUrl ? (<img src={thumbnailUrl} alt="File preview" className="w-full h-full object-cover"/>) :
                         (<span className="text-sm text-gray-600">No preview</span>)}
                 </div>

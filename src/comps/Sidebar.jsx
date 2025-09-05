@@ -23,7 +23,7 @@ function Sidebar() {
     ];
 
     if (isCurrentUserAdmin()) {
-        mainButtons.push({label: 'Admin Panel', icon: UserIcon, to: '/admin'});
+        mainButtons.push({label: 'Admin Panel', icon: UserIcon, to: '/admin/users'});
         mainButtons.push({label: 'Audit Log', icon: ShieldCheckIcon, to: '/admin/audit'});
     }
 
@@ -33,27 +33,26 @@ function Sidebar() {
     ];
 
     return(
-        <div className="w-[250px] h-screen bg-[#09797A] flex flex-col justify-between">
+        <div className="w-[250px] h-screen bg-[var(--color-bgAccent)] flex flex-col justify-between">
             <div className="w-full h-[200px] flex items-center justify-center">
-                <h2 className="text-[30px] font-extrabold text-[#ffffff]">Lambda CMS</h2>
+                <h2 className="text-[30px] font-extrabold text-[var(--color-textP)]">Lambda CMS</h2>
             </div>
             <div className="w-full h-[400px] flex items-center justify-start flex-col">
                 {mainButtons.map(({label, icon, to}) => (
                     <SidebarButton key={label} label={label} Icon={icon} to={to} className="flex flex-row " />
                 ))}
             </div>
-            <div className="w-full h-[400px] flex items-center justify-end flex-col ">
+            <div className="w-full h-[400px] flex items-center justify-end flex-col relative">
                 {bottomButtons.map(({label, icon}) => (
                     <SidebarButton
                         key={label}
                         label={label}
                         Icon={icon}
                         className=""
-                        onClick={() => {
-                            if (label === "Settings") {
+                        onClick={label === "Settings" ? () => {
                                 setShowSettings(prev => !prev);
-                            }
-                        }}
+                                console.log("Toggle:", !showSettings);
+                            } : undefined}
                     />
                 ))}
                 {showSettings && (

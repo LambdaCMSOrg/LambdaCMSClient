@@ -34,7 +34,7 @@ export default function OptionsMenu({ handleDelete, setIsRenaming }) {
 
     return <div ref={dropdownRef}>
         <button className="" onClick={handleClick}>
-            <EllipsisHorizontalIcon className="w-7 h-7 text-[#777777]" />
+            <EllipsisHorizontalIcon className="w-7 h-7 text-[var(--color-textH1)]" />
         </button>
         {isVisible && (
             <div className="absolute top-10 right-0 bg-[#efefef] border rounded shadow p-2 z-50 space-y-2">

@@ -9,9 +9,32 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root {
+  --color-bg: #F1FFFB;
+  --color-bgAccent: #09797a;
+  --color-textH1: #555555;
+  --color-textH2: #444444;
+  --color-textP: #ffffff;;
+  --color-textB: #CFEFD4;
+  --color-textF: #DCEFE9;
+  --color-textBorder: #09797a;
+}
+
+.dark {
+  --color-bg: #253437;
+  --color-bgAccent: #14575C;
+  --color-textH1: #E1E4E9;
+  --color-textH2: #E5E7EB;
+  --color-textP: #ffffff;
+  --color-textB: #97F0C1;
+  --color-textF: #09797a;
+  --color-textBorder: #e5e7eb;
 }

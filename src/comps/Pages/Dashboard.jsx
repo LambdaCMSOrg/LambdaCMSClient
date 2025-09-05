@@ -29,10 +29,10 @@ function Dashboard() {
     });
 
     return (
-        <div className="flex-1 flex flex-col h-screen bg-[#F1FFFB] p-20">
+        <div className="flex-1 flex flex-col h-screen bg-[var(--color-bg)] p-20">
             <div className="w-full h-40 px-4">
-                <h2 className="text-[34px] font-bold text-[#444444]">Dashboard</h2>
-                <p className=" text-[#555555]">Latest uploaded Content</p>
+                <h2 className="text-[34px] font-bold text-[var(--color-textH2)]">Dashboard</h2>
+                <p className=" text-[var(--color-textH1)]">Latest uploaded Content</p>
             </div>
             <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-6 px-4 py-4">
                 {files.map((file) => (

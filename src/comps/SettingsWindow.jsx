@@ -5,7 +5,7 @@ function SettingsWindow({ onClose }) {
     const { darkMode, setDarkMode } = useContext(ThemeContext);
 
     return (
-        <div className="absolute left-full ml-2 top-0 p-4 bg-white dark:bg-gray-800 shadow-lg rounded">
+        <div className="absolute left-full ml-2 top-40 p-4 bg-white dark:bg-gray-800 shadow-lg rounded">
             <h3 className="text-sm font-bold mb-2 text-gray-800 dark:text-white">Einstellungen</h3>
             <button
                 className="text-sm text-blue-600 dark:text-blue-300"

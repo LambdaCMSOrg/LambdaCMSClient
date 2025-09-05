@@ -52,12 +52,12 @@ export function LogPanel() {
     }, [filteredLogs]);
 
     return (
-        <div className="h-screen bg-[#F1FFFB]">
+        <div className="h-screen bg-[var(--color-bg)]">
             <div className="mx-auto px-24 py-20">
                 <div className="mb-24 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <h2 className="text-[34px] font-bold text-[#444444]">Audit Log</h2>
-                        <p className=" text-[#555555]">View log entries.</p>
+                        <h2 className="text-[34px] font-bold text-[var(--color-textH2)]">Audit Log</h2>
+                        <p className="text-[var(--color-textH1)]">View log entries.</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <input type="text" placeholder="Search..." value={search} onChange={handleSearch} className="flex-1 p-1 pr-16 mr-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />

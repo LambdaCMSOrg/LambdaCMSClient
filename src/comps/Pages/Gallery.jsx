@@ -68,19 +68,19 @@ export default function Gallery() {
     }, [folderStack]);
 
     return (
-        <div className="flex-1 flex flex-col h-screen bg-[#F1FFFB] p-20">
+        <div className="flex-1 flex flex-col h-screen bg-[var(--color-bg)] p-20">
             <div className="w-full h-40 flex justify-between px-4">
                 <div className="">
-                    <h2 className="text-[34px] font-bold text-[#444444]">Gallery</h2>
-                    <p className=" text-[#555555]">Upload your Content</p>
+                    <h2 className="text-[34px] font-bold text-[var(--color-textH2)]">Gallery</h2>
+                    <p className="text-[var(--color-textH1)]">Upload your Content</p>
                 </div>
                 <div className="flex justify-center gap-4">
                     <button onClick={() => setCreateFolder(true)}
-                            className="flex h-12 w-12 bg-[#07797a] shadow-[0_6px_9px_-2px_rgba(0,0,0,0.6)] rounded-full justify-center items-center font-bold text-[#f1fffb] text-[30px] transition-transform duration-200 hover:scale-110">
+                            className="flex h-12 w-12 bg-[var(--color-bgAccent)] shadow-[0_6px_9px_-2px_rgba(0,0,0,0.6)] rounded-full justify-center items-center font-bold text-[#f1fffb] text-[30px] transition-transform duration-200 hover:scale-110">
                         <FolderPlusIcon className="w-6 h-6"/>
                     </button>
                     <button onClick={() => setShowUpload(true)}
-                            className="flex h-12 w-12 bg-[#07797a] shadow-[0_6px_9px_-2px_rgba(0,0,0,0.6)] rounded-full justify-center items-center font-bold text-[#f1fffb] text-[30px] transition-transform duration-200 hover:scale-110">
+                            className="flex h-12 w-12 bg-[var(--color-bgAccent)] shadow-[0_6px_9px_-2px_rgba(0,0,0,0.6)] rounded-full justify-center items-center font-bold text-[#f1fffb] text-[30px] transition-transform duration-200 hover:scale-110">
                         <ArrowUpTrayIcon className="w-6 h-6"/>
                     </button>
                 </div>

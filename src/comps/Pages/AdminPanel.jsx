@@ -127,12 +127,12 @@ export function AdminPanel() {
     }
 
     return (
-        <div className="h-screen bg-[#F1FFFB]">
+        <div className="h-screen bg-[var(--color-bg)]">
             <div className="mx-auto px-24 py-20">
                 <div className="mb-24 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <h2 className="text-[34px] font-bold text-[#444444]">User Administration</h2>
-                        <p className=" text-[#555555]">Create, edit, and remove users.</p>
+                        <h2 className="text-[34px] font-bold text-[var(--color-textH2)]">User Administration</h2>
+                        <p className="text-[var(--color-textH1)]">Create, edit, and remove users.</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <input className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
